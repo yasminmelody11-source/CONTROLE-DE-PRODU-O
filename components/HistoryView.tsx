@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { Filter, Search, Download, Trash2, Edit3, XCircle, Layers } from 'lucide-react';
+import { Filter, Search, Trash2, Edit3, XCircle, Layers } from 'lucide-react';
 import { ProductionEntry, Employee, SERVICES } from '../types';
 
 interface HistoryViewProps {
@@ -34,19 +34,6 @@ const HistoryView: React.FC<HistoryViewProps> = ({ production, employees, onUpda
     if (confirm('Deseja realmente excluir este registro?')) onUpdate(production.filter(p => p.id !== id));
   };
 
-  const exportCSV = () => {
-    const headers = ['Data', 'Funcionário', 'Obra', 'Pavimento', 'Serviço', 'Quantidade', 'Unidade', 'Valor Unit.', 'Valor Total'];
-    const rows = filteredData.map(p => {
-      const worker = employees.find(e => e.id === p.employeeId);
-      return [p.date, worker?.name || '?', p.site, p.pavimento || '', p.serviceType, p.quantity, p.unit, p.unitPrice, p.totalValue].join(',');
-    });
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
-    const link = document.createElement("a");
-    link.setAttribute("href", encodeURI(csvContent));
-    link.setAttribute("download", `producao_${new Date().toISOString().split('T')[0]}.csv`);
-    link.click();
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -54,9 +41,6 @@ const HistoryView: React.FC<HistoryViewProps> = ({ production, employees, onUpda
           <h1 className="text-2xl font-bold text-slate-900">Histórico de Produção</h1>
           <p className="text-slate-500">Gestão detalhada por pavimento</p>
         </div>
-        <button onClick={exportCSV} className="flex items-center justify-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl font-semibold">
-          <Download size={20} /> Exportar CSV
-        </button>
       </div>
 
       <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

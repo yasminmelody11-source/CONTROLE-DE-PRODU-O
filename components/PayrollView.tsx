@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { Banknote, Calendar, ChevronLeft, ChevronRight, Download, Printer, Percent, Calculator, Info } from 'lucide-react';
+import { Banknote, Calendar, ChevronLeft, ChevronRight, Info } from 'lucide-react';
 import { Employee, ProductionEntry } from '../types';
 
 interface PayrollViewProps {
@@ -45,7 +45,6 @@ const PayrollView: React.FC<PayrollViewProps> = ({
       const inssVal = round(emp.grossSalary * (emp.inssPercent / 100));
       
       // Pagamento Extra (Saque em Dinheiro)
-      // Arredondamento final de cada etapa para garantir precisão contábil
       const cashPayment = round(totalProductionValue - emp.netSalary - fgtsVal - inssVal - advanceAmount);
       const totalToReceiveInCash = round(emp.netSalary + cashPayment);
 
@@ -80,18 +79,15 @@ const PayrollView: React.FC<PayrollViewProps> = ({
   const totalCashToWithdraw = round(payrollData.reduce((sum, item) => sum + Math.max(0, item.cashPayment), 0));
 
   return (
-    <div className="space-y-6 print:space-y-2">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 print:hidden">
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Folha de Pagamento</h1>
           <p className="text-slate-500">Gestão de salários e bônus de produção</p>
         </div>
-        <button onClick={() => window.print()} className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition-all">
-          <Printer size={18} /> Gerar PDF para Saque
-        </button>
       </div>
 
-      <div className="flex items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-slate-100 print:hidden">
+      <div className="flex items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
         <button onClick={() => changeMonth(-1)} className="p-2 hover:bg-slate-50 rounded-full"><ChevronLeft /></button>
         <span className="text-lg font-black text-slate-700 capitalize flex items-center gap-2">
           <Calendar className="text-orange-500" /> {monthLabel}
@@ -99,7 +95,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({
         <button onClick={() => changeMonth(1)} className="p-2 hover:bg-slate-50 rounded-full"><ChevronRight /></button>
       </div>
 
-      <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl flex gap-3 print:hidden">
+      <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl flex gap-3">
         <Info className="text-blue-500 shrink-0" size={24} />
         <div className="text-sm text-blue-700">
           <p><strong>Cálculo Automático:</strong> Os valores são arredondados matematicamente para 2 casas decimais.</p>
@@ -109,7 +105,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({
 
       <div className="space-y-6">
         {payrollData.map(item => (
-          <div key={item.id} className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-4 print:p-4 print:border-slate-300 print:shadow-none print:break-inside-avoid">
+          <div key={item.id} className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
               <div>
                 <h3 className="text-xl font-black text-slate-900">{item.name}</h3>
@@ -121,7 +117,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 print:hidden">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               <div className="space-y-1">
                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">SALÁRIO BRUTO</label>
                 <input 
@@ -176,14 +172,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({
               </div>
             </div>
 
-            <div className="bg-slate-50 p-4 rounded-2xl grid grid-cols-2 md:grid-cols-4 gap-4 border border-slate-100 print:bg-white print:border-slate-200">
-              <div className="hidden print:block col-span-2">
-                 <p className="text-[10px] font-black text-slate-400 uppercase">Resumo Salarial</p>
-                 <div className="text-xs text-slate-600 mt-1 font-bold">
-                    Bruto: R$ {item.grossSalary.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} | 
-                    Líquido (Contracheque): R$ {item.netSalary.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                 </div>
-              </div>
+            <div className="bg-slate-50 p-4 rounded-2xl grid grid-cols-2 md:grid-cols-4 gap-4 border border-slate-100">
               <div>
                 <span className="text-[10px] font-black text-slate-400 uppercase block">Desconto FGTS</span>
                 <span className="font-bold text-slate-700 text-sm">R$ {item.fgtsVal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
@@ -192,7 +181,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({
                 <span className="text-[10px] font-black text-slate-400 uppercase block">Desconto INSS</span>
                 <span className="font-bold text-slate-700 text-sm">R$ {item.inssVal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
-              <div className="text-right col-span-2 md:col-span-1 border-l pl-4 border-slate-200 print:border-none">
+              <div className="text-right col-span-2 md:col-span-1 border-l pl-4 border-slate-200">
                 <span className="text-[10px] font-black text-slate-400 uppercase block">Pagamento Extra (Em Dinheiro)</span>
                 <span className="font-black text-slate-900">R$ {Math.max(0, item.cashPayment).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
@@ -200,18 +189,18 @@ const PayrollView: React.FC<PayrollViewProps> = ({
           </div>
         ))}
 
-        <div className="bg-slate-900 p-8 rounded-3xl text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 print:border-2 print:border-slate-900 print:text-black print:bg-white">
+        <div className="bg-slate-900 p-8 rounded-3xl text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <div className="bg-orange-500 p-4 rounded-2xl print:bg-slate-100">
-              <Banknote size={32} className="print:text-slate-900" />
+            <div className="bg-orange-500 p-4 rounded-2xl">
+              <Banknote size={32} />
             </div>
             <div>
-              <p className="text-orange-200 text-xs font-black uppercase tracking-widest print:text-slate-500">Total a sacar em dinheiro para pagamento da equipe</p>
+              <p className="text-orange-200 text-xs font-black uppercase tracking-widest">Total a sacar em dinheiro para pagamento da equipe</p>
               <h2 className="text-xl font-bold">Pagamento Extra de Produção</h2>
             </div>
           </div>
           <div className="text-center md:text-right">
-             <p className="text-xs font-black text-orange-200 uppercase mb-1 print:text-slate-500">Mês de Referência: {monthLabel}</p>
+             <p className="text-xs font-black text-orange-200 uppercase mb-1">Mês de Referência: {monthLabel}</p>
              <p className="text-4xl font-black">R$ {totalCashToWithdraw.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
           </div>
         </div>

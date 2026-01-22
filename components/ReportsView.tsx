@@ -4,7 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie
 } from 'recharts';
 import { ProductionEntry, Employee, SERVICES } from '../types';
-import { FileText, TrendingUp, Briefcase, MapPin } from 'lucide-react';
+import { TrendingUp, Briefcase } from 'lucide-react';
 
 interface ReportsViewProps {
   production: ProductionEntry[];
@@ -34,15 +34,12 @@ const ReportsView: React.FC<ReportsViewProps> = ({ production, employees }) => {
   }, [production, employees]);
 
   return (
-    <div className="space-y-8 print:p-0">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 print:hidden">
+    <div className="space-y-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Relatórios Financeiros</h1>
           <p className="text-slate-500">Produção total em Reais (R$)</p>
         </div>
-        <button onClick={() => window.print()} className="flex items-center gap-2 bg-orange-500 text-white px-5 py-2.5 rounded-xl font-semibold">
-          <FileText size={20} /> Imprimir PDF
-        </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
